@@ -6,15 +6,12 @@ import { useState } from "react";
 import Router from "./src/components/Router";
 
 export default function App() {
-  const [selected, setSelected] = useState(0);
+  const [selected, setSelected] = useState(1);
 
   return (
     <View style={styles.container}>
       <StatusBar style="auto" animated={true} />
       <Router selected={selected}></Router>
-      {/* <Text style={styles.text}>
-        Open up App.js to start working on your app!
-      </Text> */}
       <Menu selected={selected} setSelected={setSelected}></Menu>
     </View>
   );
@@ -26,8 +23,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "space-between",
-  },
-  text: {
     marginTop: 50,
   },
 });

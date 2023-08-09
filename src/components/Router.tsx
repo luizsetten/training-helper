@@ -1,10 +1,11 @@
 import { StyleSheet, Text, View } from "react-native";
 import Timer from "../pages/Timer";
+import Home from "../pages/Home";
 
 const Router = ({ selected }: { selected: number }) => {
   const renderComponent = (selection) => {
     if (selection === 0) return <Timer />;
-    if (selection === 1) return <Text>Home</Text>;
+    if (selection === 1) return <Home />;
     if (selection === 2) return <Text>Add</Text>;
   };
 
@@ -15,7 +16,6 @@ export default Router;
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 50,
     flex: 1,
     backgroundColor: "#ffffff",
     width: "100%",
