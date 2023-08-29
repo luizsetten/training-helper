@@ -9,15 +9,49 @@ interface Exercise {
   done?: number;
 }
 
+interface ExerciseGroup {
+  name: string;
+  exerciseList: Exercise[];
+  selected?: boolean;
+}
+
 const Home = () => {
-  const [exerciseList, setExerciseList] = useState<Exercise[]>([
-    { name: "Supino reto", reps: ["10"], series: 4, done: 0 },
-    { name: "Supino inclinado", reps: ["5x2", "6x3"], done: 0 },
-    { name: "Supino asd", reps: [15, 12, 10, 8], series: 4, done: 0 },
+  const [exerciseGroupList, setExerciseGroupList] = useState<ExerciseGroup[]>([
+    {
+      name: "Peito",
+      selected: true,
+      exerciseList: [
+        {
+          name: "AQC Cricifixo maq",
+          reps: [10],
+          series: 10,
+          done: 0,
+        },
+        { name: "Supino reto", reps: [15, 12, 10, 8], series: 4, done: 0 },
+        { name: "Supino inclinado", reps: [15, 12, 10, 8], series: 4, done: 0 },
+        { name: "Crucifixo Arnold", reps: [12], series: 3, done: 0 },
+        { name: "Crucifixo Arnol", reps: [12], series: 3, done: 0 },
+      ],
+    },
+    { name: "Peito", exerciseList: [] },
+    { name: "Peito", exerciseList: [] },
   ]);
 
+  const selectedExerciseGroup = exerciseGroupList.find((i) => i.selected);
+
+  const handleSetExerciseGroup = (indexSelected: number) => {
+    setExerciseGroupList((groups) =>
+      groups.map((group, index) => ({
+        ...group,
+        selected: indexSelected === index,
+      }))
+    );
+  };
+
   const countSerie = (exercisePosition: number) => {
-    const updatedList = exerciseList.map((i, index) => {
+    const indexFound = exerciseGroupList.findIndex((i) => i.selected);
+
+    const updatedGroup = selectedExerciseGroup.exerciseList.map((i, index) => {
       if (index === exercisePosition)
         return {
           ...i,
@@ -32,12 +66,15 @@ const Home = () => {
       return i;
     });
 
-    setExerciseList(updatedList);
+    setExerciseGroupList((groups) =>
+      groups.map((group, index) =>
+        index === indexFound ? { ...group, exerciseList: updatedGroup } : group
+      )
+    );
   };
 
   const resetSerie = (exercisePosition: number) => {
-    console.log(exercisePosition);
-    const updatedList = exerciseList.map((i, index) => {
+    const updatedGroup = selectedExerciseGroup.exerciseList.map((i, index) => {
       if (index === exercisePosition)
         return {
           ...i,
@@ -47,7 +84,13 @@ const Home = () => {
       return i;
     });
 
-    setExerciseList(updatedList);
+    const indexFound = exerciseGroupList.findIndex((i) => i.selected);
+
+    setExerciseGroupList((groups) =>
+      groups.map((group, index) =>
+        index === indexFound ? { ...group, exerciseList: updatedGroup } : group
+      )
+    );
   };
 
   const getStyleRep = (exercise: Exercise, indexRep: number) => {
@@ -71,9 +114,35 @@ const Home = () => {
     };
   };
 
+  const getStyleGroup = (selected: boolean) => {
+    return {
+      backgroundColor: selected ? "#51bee8" : "#abbedc33",
+      color: selected ? "#F3f3f3" : "#505050",
+      borderRadius: 4,
+      padding: 8,
+    };
+  };
+
+  const getStyleGroupText = (selected: boolean) => {
+    return {
+      color: selected ? "#F3f3f3" : "#505050",
+    };
+  };
+
   return (
     <View style={styles.container}>
-      {exerciseList.map((item, index) => (
+      <View style={{ display: "flex", flexDirection: "row" }}>
+        {exerciseGroupList.map((item, index) => (
+          <TouchableOpacity
+            key={item.name + index}
+            style={getStyleGroup(item.selected)}
+            onPress={() => handleSetExerciseGroup(index)}
+          >
+            <Text style={getStyleGroupText(item.selected)}>{item.name}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+      {selectedExerciseGroup?.exerciseList.map((item, index) => (
         <TouchableOpacity
           key={item.name}
           style={styles.containerExercise}
